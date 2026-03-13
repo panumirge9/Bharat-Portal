@@ -1,0 +1,115 @@
+.auth-body {
+    background: radial-gradient(circle at center, #111424 0%, #05060a 100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.auth-wrapper {
+    width: 100%;
+    max-width: 450px;
+    padding: 20px;
+}
+
+.auth-card {
+    background-color: #1a1c29;
+    padding: 40px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 153, 51, 0.3);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+    text-align: center;
+}
+
+.auth-logo {
+    justify-content: center;
+    margin-bottom: 20px;
+    font-size: 2rem;
+}
+
+.auth-card h2 {
+    color: #ff9933;
+    margin-bottom: 10px;
+}
+
+.auth-subtitle {
+    color: #aaaaaa;
+    margin-bottom: 30px;
+    font-size: 0.95rem;
+}
+
+.input-group {
+    text-align: left;
+    margin-bottom: 20px;
+}
+
+.input-group label {
+    display: block;
+    color: #cccccc;
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 12px 15px;
+    background-color: #0f111a;
+    border: 1px solid #333;
+    border-radius: 6px;
+    color: #ffffff;
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.3s;
+}
+
+.input-group input:focus {
+    border-color: #138808;
+}
+
+.hint-text {
+    display: block;
+    margin-top: 8px;
+    color: #888;
+    font-size: 0.8rem;
+}
+
+.auth-btn {
+    width: 100%;
+    padding: 14px;
+    background-color: #ff9933;
+    color: #000;
+    border: none;
+    border-radius: 6px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.1s;
+    margin-top: 10px;
+}
+
+.auth-btn:hover {
+    background-color: #e68a2e;
+}
+
+.auth-btn:active {
+    transform: scale(0.98);
+}
+
+.success-btn {
+    background-color: #138808;
+    color: #fff;
+}
+
+.success-btn:hover {
+    background-color: #0f6c06;
+}
+
+.form-msg {
+    margin-top: 15px;
+    font-size: 0.9rem;
+    min-height: 20px;
+}
+
+.form-msg.error { color: #ff4444; }
+.form-msg.success { color: #138808; }
+.form-msg.loading { color: #ff9933; }

@@ -1,0 +1,402 @@
+/* --- CSS Variables for Theme Support --- */
+:root {
+    --bg-color: #0b0d17;
+    --text-color: #ffffff;
+    --accent-orange: #ff9933;
+    --accent-green: #138808;
+    --card-bg: #1a1c29;
+    --nav-bg: rgba(11, 13, 23, 0.95);
+    --timeline-line: #333;
+}
+
+.light-mode {
+    --bg-color: #f4f6f9;
+    --text-color: #222222;
+    --card-bg: #ffffff;
+    --nav-bg: rgba(255, 255, 255, 0.95);
+    --timeline-line: #ccc;
+}
+
+/* --- Basic Reset --- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    line-height: 1.6;
+    overflow-x: hidden;
+    transition: background-color 0.4s, color 0.4s;
+}
+
+/* --- Particle Star Background --- */
+#stars-container {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    z-index: -1;
+    pointer-events: none;
+    background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%);
+}
+.light-mode #stars-container {
+    background: none; /* Hide stars in light mode */
+}
+
+/* --- Header & Navigation --- */
+header {
+    position: fixed;
+    top: 0; width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 50px;
+    background: transparent;
+    z-index: 1000;
+    transition: all 0.4s ease;
+}
+
+header.scrolled {
+    padding: 10px 50px;
+    background: var(--nav-bg);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+}
+
+.logo {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--accent-orange);
+}
+
+.search-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.search-container input {
+    padding: 8px 30px 8px 15px;
+    border-radius: 20px;
+    border: none;
+    outline: none;
+    background: rgba(255,255,255,0.1);
+    color: var(--text-color);
+    transition: background 0.3s;
+}
+
+.search-container input:focus {
+    background: rgba(255,255,255,0.2);
+}
+
+.search-container i {
+    position: absolute;
+    right: 10px;
+    color: #aaa;
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+}
+
+nav ul li a {
+    color: var(--text-color);
+    text-decoration: none;
+    font-size: 1rem;
+    text-transform: uppercase;
+    font-weight: 600;
+    transition: color 0.3s;
+}
+
+nav ul li a:hover {
+    color: var(--accent-green);
+}
+
+#theme-toggle {
+    background: none;
+    border: none;
+    color: var(--text-color);
+    font-size: 1.2rem;
+    cursor: pointer;
+}
+
+/* --- News Ticker --- */
+.news-ticker {
+    position: fixed;
+    top: 75px; /* Just below navbar */
+    width: 100%;
+    background: var(--accent-orange);
+    color: #000;
+    display: flex;
+    z-index: 999;
+    font-weight: bold;
+}
+
+.ticker-label {
+    background: #d47a22;
+    padding: 5px 20px;
+    text-transform: uppercase;
+}
+
+.ticker-content {
+    padding: 5px 20px;
+    white-space: nowrap;
+    overflow: hidden;
+    animation: fadeTicker 0.5s ease-in-out;
+}
+
+/* --- Hero Section --- */
+.hero {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(11, 13, 23, 0.9)), 
+                url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2072&auto=format&fit=crop') no-repeat center center/cover;
+    margin-top: 0;
+}
+
+.hero-content h1 {
+    font-size: 4rem;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    color: #fff;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
+}
+
+.hero-content p {
+    font-size: 1.2rem;
+    margin-bottom: 30px;
+    color: #ddd;
+    max-width: 600px;
+    margin-inline: auto;
+}
+
+.countdown-container {
+    background: rgba(0,0,0,0.6);
+    padding: 15px;
+    border-radius: 8px;
+    display: inline-block;
+    margin-bottom: 30px;
+    border: 1px solid var(--accent-orange);
+}
+
+.countdown-container h3 { color: var(--accent-orange); font-size: 1rem; margin-bottom: 5px;}
+#countdown { font-size: 2rem; font-weight: bold; color: #fff; letter-spacing: 2px;}
+
+.cta-btn {
+    padding: 15px 30px;
+    font-size: 1.1rem;
+    background-color: var(--accent-orange);
+    color: #000;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: transform 0.3s, box-shadow 0.3s;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0 auto;
+}
+
+.cta-btn:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(255, 153, 51, 0.4);
+}
+
+.rocket-icon {
+    transition: transform 0.5s ease;
+}
+.cta-btn:hover .rocket-icon {
+    transform: translateY(-50px) scale(0); /* Launch animation */
+}
+
+/* --- Global Section Styles --- */
+section { padding: 100px 50px; }
+.section-title {
+    text-align: center;
+    font-size: 2.5rem;
+    margin-bottom: 50px;
+    color: var(--accent-orange);
+    text-transform: uppercase;
+}
+
+/* --- Statistics Section --- */
+.stats {
+    display: flex;
+    justify-content: space-around;
+    background: var(--card-bg);
+    padding: 60px 20px;
+    text-align: center;
+    border-top: 2px solid var(--accent-green);
+    border-bottom: 2px solid var(--accent-green);
+}
+.stat-box h2 { font-size: 3.5rem; color: var(--accent-orange); }
+.stat-box p { font-size: 1.1rem; font-weight: 600; text-transform: uppercase;}
+
+/* --- Timeline Section --- */
+.timeline {
+    position: relative;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+.timeline::after {
+    content: '';
+    position: absolute;
+    width: 4px;
+    background-color: var(--timeline-line);
+    top: 0; bottom: 0; left: 50%;
+    margin-left: -2px;
+}
+.timeline-item {
+    padding: 10px 40px;
+    position: relative;
+    background-color: inherit;
+    width: 50%;
+}
+.timeline-item::after {
+    content: '';
+    position: absolute;
+    width: 20px; height: 20px;
+    right: -10px; top: 15px;
+    background-color: var(--card-bg);
+    border: 4px solid var(--accent-orange);
+    border-radius: 50%;
+    z-index: 1;
+}
+.left { left: 0; }
+.right { left: 50%; }
+.right::after { left: -10px; }
+.timeline-content {
+    padding: 20px;
+    background-color: var(--card-bg);
+    position: relative;
+    border-radius: 6px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    border-left: 4px solid var(--accent-green);
+}
+.timeline-content h3 { color: var(--accent-orange); margin-bottom: 10px;}
+
+/* --- Grid for Missions & Satellites --- */
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.card {
+    background: var(--card-bg);
+    padding: 30px;
+    border-radius: 10px;
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+    border: 1px solid rgba(255,255,255,0.05);
+}
+
+.card:hover {
+    transform: translateY(-10px) scale(1.02);
+    box-shadow: 0 15px 30px rgba(19, 136, 8, 0.2);
+}
+
+.card h3 { color: var(--accent-orange); font-size: 1.5rem; }
+.card .year {
+    display: inline-block;
+    background: rgba(255, 153, 51, 0.2);
+    padding: 3px 10px;
+    border-radius: 20px;
+    margin-bottom: 15px;
+    font-size: 0.9rem;
+    color: var(--accent-orange);
+}
+
+.info-card { text-align: center; }
+.info-card i { color: var(--accent-green); margin-bottom: 20px; }
+
+/* --- Human Spaceflight Section --- */
+.human-spaceflight {
+    display: flex;
+    align-items: center;
+    gap: 50px;
+    max-width: 1200px;
+    margin: 0 auto;
+    background: var(--card-bg);
+    padding: 50px;
+    border-radius: 15px;
+}
+.hs-content { flex: 1; }
+.hs-content p { margin-bottom: 15px; }
+.hs-content strong { color: var(--accent-orange); }
+.hs-image { flex: 1; border-radius: 10px; overflow: hidden; }
+.hs-image img { width: 100%; height: auto; display: block; }
+
+/* --- Gallery Section --- */
+.gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+.gallery-item {
+    overflow: hidden;
+    border-radius: 10px;
+    cursor: pointer;
+}
+.gallery-item img {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+.gallery-item:hover img {
+    transform: scale(1.1);
+}
+
+/* --- Scroll Reveal Animations --- */
+.reveal {
+    opacity: 0;
+    transform: translateY(50px);
+    transition: all 0.8s ease;
+}
+.reveal.active {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* --- Footer --- */
+footer {
+    background: #05060a;
+    padding: 40px 20px;
+    text-align: center;
+    color: #888;
+}
+.light-mode footer { background: #e0e0e0; color: #444; }
+.footer-links { margin-bottom: 20px; }
+.footer-links a { color: var(--accent-orange); text-decoration: none; margin: 0 10px; }
+.social-icons i { font-size: 1.5rem; margin: 0 15px; color: var(--text-color); cursor: pointer; transition: color 0.3s; }
+.social-icons i:hover { color: var(--accent-orange); }
+
+/* --- Responsive Adjustments --- */
+@media (max-width: 900px) {
+    .human-spaceflight { flex-direction: column; }
+    .timeline::after { left: 31px; }
+    .timeline-item { width: 100%; padding-left: 70px; padding-right: 25px; }
+    .timeline-item::after { left: 21px; }
+    .left, .right { left: 0; }
+    .stats { flex-direction: column; gap: 30px; }
+}
+
+@media (max-width: 768px) {
+    header { flex-direction: column; padding: 15px; gap: 10px;}
+    header.scrolled { padding: 10px; }
+    nav ul { flex-wrap: wrap; justify-content: center; }
+    .hero-content h1 { font-size: 2.5rem; }
+    .search-container { display: none; /* Hide on very small screens for space */ }
+    .news-ticker { top: 120px; }
+}

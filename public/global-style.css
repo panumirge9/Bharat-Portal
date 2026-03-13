@@ -1,0 +1,92 @@
+body, html {
+    margin: 0;
+    padding: 0;
+    overflow: hidden; /* Prevent page scroll so globe feels like an app */
+    background: #000;
+}
+
+#globe-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 1;
+}
+
+/* Side News Panel */
+.side-panel {
+    position: fixed;
+    right: -400px;
+    top: 20px;
+    bottom: 20px;
+    width: 350px;
+    background: rgba(10, 15, 30, 0.9);
+    border-left: 3px solid #ff9933;
+    z-index: 100;
+    padding: 25px;
+    color: white;
+    transition: right 0.4s ease-out;
+    box-shadow: -10px 0 30px rgba(0,0,0,0.8);
+    overflow-y: auto;
+    border-radius: 15px 0 0 15px;
+}
+
+.side-panel.active {
+    right: 0;
+}
+
+#close-panel {
+    background: none;
+    border: none;
+    color: #ff4444;
+    font-size: 2rem;
+    cursor: pointer;
+    float: right;
+}
+
+.news-item {
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.news-item h4 { color: #ff9933; margin: 0 0 5px 0; }
+.news-item a { color: #138808; text-decoration: none; font-weight: bold; font-size: 0.9rem; }
+/* 1. Add a Vignette over the globe container to focus light on the center */
+/* 1. Cinematic Vignette Overlay */
+/* This adds deep space shadows to the corners of the screen */
+#globe-container::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: radial-gradient(circle at center, transparent 30%, rgba(0,0,0,0.85) 100%);
+    pointer-events: none; /* Clicks still pass through to the globe */
+    z-index: 2;
+}
+
+/* 2. Glassmorphism Side Panel */
+/* Blurs the globe behind the news panel for a futuristic look */
+.side-panel {
+    background: rgba(10, 15, 30, 0.7); /* Semi-transparent */
+    backdrop-filter: blur(10px);       /* Blur effect */
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 153, 51, 0.2);
+    border-left: 4px solid #ff9933;
+    box-shadow: -15px 0 45px rgba(0,0,0,0.9);
+}
+
+/* 3. Subtle CRT Scanline Effect */
+/* Adds a tactical monitor feel to the entire viewport */
+body::before {
+    content: " ";
+    display: block;
+    position: absolute;
+    top: 0; left: 0; bottom: 0; right: 0;
+    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.15) 50%), 
+                linear-gradient(90deg, rgba(255, 0, 0, 0.02), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.02));
+    z-index: 1000;
+    background-size: 100% 3px, 3px 100%;
+    pointer-events: none;
+}

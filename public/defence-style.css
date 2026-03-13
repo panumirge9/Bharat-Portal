@@ -1,0 +1,311 @@
+/* --- Defence Hero Section --- */
+/* --- Defence Hero Section (Animated Grid) --- */
+.defence-hero {
+    position: relative;
+    height: 70vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    overflow: hidden;
+    background-color: #02060f; /* Deep dark base */
+    
+    /* Creates the green tactical grid */
+    background-image: 
+        linear-gradient(rgba(0, 255, 0, 0.15) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 255, 0, 0.15) 1px, transparent 1px);
+    background-size: 40px 40px; /* Size of the grid squares */
+    
+    /* Animates the grid to slowly move diagonally */
+    animation: moveTacticalGrid 15s linear infinite;
+}
+
+/* The animation keyframes */
+@keyframes moveTacticalGrid {
+    0% { background-position: 0 0; }
+    100% { background-position: 40px 40px; }
+}
+
+.hero-overlay {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    /* A dark vignette around the edges to make the center pop */
+    background: radial-gradient(circle at center, transparent 20%, #02060f 100%);
+    z-index: 1;
+}
+
+/* Ensure the text stays above the animated grid */
+.defence-hero .hero-content {
+    position: relative;
+    z-index: 4; /* Puts the text on top of everything */
+}
+
+
+.defence-hero h1 {
+    font-size: 4rem;
+    color: #ffffff;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 20px;
+    text-shadow: 2px 2px 5px rgba(0,0,0,0.8);
+}
+
+.defence-hero p {
+    font-size: 1.2rem;
+    color: #cccccc;
+}
+
+/* --- Global Section Styles --- */
+section {
+    padding: 80px 50px;
+}
+
+.section-title {
+    text-align: center;
+    font-size: 2.5rem;
+    color: #ff9933; /* Saffron */
+    margin-bottom: 50px;
+    text-transform: uppercase;
+}
+
+/* --- Tri-Services Grid --- */
+.services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.service-card {
+    padding: 40px;
+    border-radius: 10px;
+    text-align: center;
+    color: white;
+    transition: transform 0.3s ease;
+    border-top: 4px solid transparent;
+}
+
+.service-card:hover {
+    transform: translateY(-10px);
+}
+
+.service-card i {
+    font-size: 3.5rem;
+    margin-bottom: 20px;
+}
+
+.service-card h3 {
+    font-size: 1.8rem;
+    margin-bottom: 15px;
+}
+
+/* Service Specific Colors */
+.army {
+    background-color: #2b3a2a; /* Olive Green */
+    border-top-color: #4CAF50;
+}
+.navy {
+    background-color: #0f1c2e; /* Navy Blue */
+    border-top-color: #2196F3;
+}
+.airforce {
+    background-color: #1a3c5a; /* Air Force Blue */
+    border-top-color: #03A9F4;
+}
+
+/* --- Indigenous Tech Section --- */
+.indigenous-tech {
+    background-color: #0a0b10;
+}
+
+.tech-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.tech-item {
+    background-color: #151821;
+    border-left: 5px solid #138808; /* Indian Green */
+    padding: 30px;
+    border-radius: 0 10px 10px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.tech-info h3 {
+    color: #ffffff;
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+}
+
+.tech-tag {
+    display: inline-block;
+    background-color: rgba(19, 136, 8, 0.2);
+    color: #4CAF50;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.tech-info p {
+    color: #aaaaaa;
+    line-height: 1.5;
+}
+/* --- Expandable Card Styles --- */
+.service-details {
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: max-height 0.5s ease, opacity 0.5s ease, margin-top 0.5s ease;
+    font-size: 0.9rem;
+    color: #cccccc;
+    text-align: left;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* When the JS adds the 'expanded' class to the card */
+.service-card.expanded {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5);
+}
+
+.service-card.expanded .service-details {
+    max-height: 200px; /* Arbitrary large number to allow content to fit */
+    opacity: 1;
+    margin-top: 20px;
+    padding-top: 15px;
+}
+
+.service-card {
+    cursor: pointer; /* Lets the user know it's clickable */
+}
+/* =========================================
+   TACTICAL HUD & COMMAND CENTER STYLES
+   ========================================= */
+
+/* --- CRT Monitor Scanlines --- */
+.scanlines {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+    background-size: 100% 4px, 3px 100%;
+    z-index: 2;
+    pointer-events: none;
+}
+
+/* --- Tactical HUD Corners --- */
+.hud-corner {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    border: 3px solid rgba(19, 136, 8, 0.7); /* Indian Green */
+    z-index: 3;
+}
+.top-left { top: 30px; left: 30px; border-right: none; border-bottom: none; }
+.top-right { top: 30px; right: 30px; border-left: none; border-bottom: none; }
+.bottom-left { bottom: 30px; left: 30px; border-right: none; border-top: none; }
+.bottom-right { bottom: 30px; right: 30px; border-left: none; border-top: none; }
+
+/* --- Security Status Badge --- */
+.security-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(0, 255, 0, 0.1);
+    border: 1px solid #00ff00;
+    color: #00ff00;
+    padding: 8px 15px;
+    border-radius: 4px;
+    font-family: monospace;
+    font-size: 0.9rem;
+    letter-spacing: 2px;
+    margin-bottom: 20px;
+    text-shadow: 0 0 5px #00ff00;
+}
+
+.pulse-dot {
+    width: 10px;
+    height: 10px;
+    background-color: #00ff00;
+    border-radius: 50%;
+    box-shadow: 0 0 10px #00ff00;
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(1.2); }
+    100% { opacity: 1; transform: scale(1); }
+}
+
+/* --- Military Blueprint Design for DRDO Tech --- */
+.indigenous-tech {
+    background-color: #02060f;
+    position: relative;
+}
+
+/* Draws the blueprint grid background */
+.tech-item {
+    background-color: #050a14;
+    background-image: 
+        linear-gradient(rgba(33, 150, 243, 0.15) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(33, 150, 243, 0.15) 1px, transparent 1px);
+    background-size: 25px 25px; /* Grid size */
+    border: 1px solid rgba(33, 150, 243, 0.4);
+    box-shadow: inset 0 0 20px rgba(33, 150, 243, 0.1);
+    border-left: 5px solid #2196F3; /* Tech Blue */
+    position: relative;
+    overflow: hidden;
+}
+
+.tech-tag {
+    background-color: rgba(33, 150, 243, 0.2);
+    color: #4fc3f7;
+    border: 1px solid rgba(33, 150, 243, 0.5);
+    font-family: monospace;
+    text-transform: uppercase;
+}
+
+/* Adds a scanning laser line effect to the blueprints */
+.tech-item::after {
+    content: '';
+    position: absolute;
+    top: -50%; left: 0; width: 100%; height: 2px;
+    background: rgba(33, 150, 243, 0.8);
+    box-shadow: 0 0 15px #2196F3;
+    animation: scanlaser 4s infinite linear;
+}
+
+@keyframes scanlaser {
+    0% { top: -10%; opacity: 0; }
+    10% { opacity: 1; }
+    90% { opacity: 1; }
+    100% { top: 110%; opacity: 0; }
+}
+/* --- Tactical Sparks Particle System --- */
+.tactical-spark {
+    position: absolute;
+    bottom: -20px;
+    width: 2px;
+    height: 20px;
+    background: #00ff00;
+    box-shadow: 0 0 10px #00ff00, 0 0 20px #00ff00;
+    opacity: 0;
+    z-index: 3; /* Sits above the grid, but behind the text */
+    animation: riseSpark linear infinite;
+}
+
+@keyframes riseSpark {
+    0% { transform: translateY(0); opacity: 0; }
+    10% { opacity: 1; }
+    90% { opacity: 1; }
+    100% { transform: translateY(-70vh); opacity: 0; }
+}
+
