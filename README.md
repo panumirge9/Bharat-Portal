@@ -1,27 +1,42 @@
-# 🇮🇳 Bharat Portal
+Bharat Portal | National Intelligence & Operations Hub
+A sophisticated, full-stack national portal concept showcasing India's advancements in Space, Defence, and Global Affairs. This project features a secure Aadhaar-based authentication flow, interactive 3D visualizations, and a modern "tactical" UI design.
 
-Bharat Portal is a modern web-based dashboard that showcases India's defence technology and space missions through an interactive user interface.
+🚀 Features
+1. Secure Authentication System
+Aadhaar Validation: Implements the Verhoeff Algorithm on the server side to validate Aadhaar checksums before processing.
 
-## 🚀 Features
-- Radar Animation
-- Missile Tracking UI
-- 3D Rotating Fighter Jet
-- Live Defence Statistics
-- DRDO Project Timeline
-- Satellite Tracking Map
+OTP Simulation: A two-stage login process (Aadhaar/Phone -> OTP).
 
-## 🛠 Technologies Used
-- HTML
-- CSS
-- JavaScript
+JWT Security: Uses JSON Web Tokens stored in HttpOnly cookies to protect sensitive routes.
 
-## 📌 Project Goal
-The goal of this project is to create a futuristic defence monitoring style dashboard that highlights India's technological progress and improves frontend UI/UX skills.
+Gatekeeper Middleware: A custom Express middleware ensures that internal pages (Defence, Space, Global) are inaccessible without a valid session.
 
-## ▶ How to Run
-1. Download or clone the repository
-2. Open `index.html`
-3. Run it in your browser
+2. Bharat Space (ISRO Insights)
+Mission Timeline: Interactive history of India's cosmic journey from Aryabhata to Chandrayaan-3.
 
-## 👨‍💻 Author
-Pranav Mirage
+Live Stats: Counter animations for mission achievements.
+
+Gaganyaan Briefing: Dedicated section for India's upcoming human spaceflight programme.
+
+3. Bharat Defence (Tactical HUD)
+Tri-Services Overview: Interactive cards for the Army, Navy, and Air Force with "tactical spark" visual effects.
+
+Indigenous Tech: Highlights DRDO's achievements like BrahMos, LCA Tejas, and INS Vikrant.
+
+Cyberpunk Aesthetic: Features scanlines, HUD corners, and glitch text effects for a military-command feel.
+
+4. Bharat Global (3D Intelligence)
+Interactive Globe: A high-resolution 3D Earth built with Globe.gl and Three.js.
+
+Satellite Tracking: Real-time orbital animation of mock "BHARAT-SAT" satellites.
+
+Live Intelligence: Click on any country to fetch real-time news briefings via the GNews API.
+
+🛠️ Tech Stack
+Frontend: HTML5, CSS3 (Custom Grid/Flexbox), JavaScript (ES6+).
+
+Visualization: Globe.gl, Three.js.
+
+Backend: Node.js, Express.js.
+
+Security: jsonwebtoken, cookie-parser.
