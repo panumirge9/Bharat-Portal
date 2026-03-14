@@ -6,7 +6,7 @@
 }
 
 body {
-    background-color: #05060a;
+    background-color: transparent; /* Changed from solid black so video shows */
     color: #ffffff;
     line-height: 1.6;
 }
@@ -65,7 +65,7 @@ body {
     align-items: center;
     text-align: center;
     padding: 50px;
-    background: radial-gradient(circle at center, #111424 0%, #05060a 100%);
+    /* Removed the radial-gradient line completely! */
 }
 
 .hero-content h1 {
@@ -120,4 +120,36 @@ body {
     font-size: 0.95rem;
     color: #888888;
     margin-bottom: 0;
+}
+/* --- Background Video Styles --- */
+.video-bg-container {
+    position: fixed; 
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -1; /* This is crucial, it pushes it behind everything */
+    overflow: hidden;
+}
+
+.back-video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; 
+}
+
+.video-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(10, 11, 16, 0.75); /* Dark tint */
+}
+
+/* Ensure the portal-hero section is transparent so the video shows through */
+.portal-hero {
+    background-color: transparent !important; /* Forces it to be see-through */
+    position: relative;
+    z-index: 1;
 }

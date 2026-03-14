@@ -7,15 +7,15 @@ document.addEventListener("DOMContentLoaded", () => {
         card.addEventListener('dblclick', () => {
 
             if (card.classList.contains('army')) {
-                window.location.href = 'army.html';
+                window.open('https://www.indianarmy.nic.in/', '_blank');
             }
 
             if (card.classList.contains('navy')) {
-                window.location.href = 'navy.html';
+                window.open('https://indiannavy.gov.in/', '_blank');
             }
 
             if (card.classList.contains('airforce')) {
-                window.location.href = 'airforce.html';
+                window.open('https://indianairforce.nic.in/', '_blank');
             }
         });
     });
