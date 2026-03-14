@@ -2,12 +2,12 @@ const express = require('express');
 const path = require('path');
 const jwt = require('jsonwebtoken'); // NEW: For generating tokens
 const cookieParser = require('cookie-parser'); // NEW: For reading cookies
-
+require('dotenv').config();
 const app = express();
 const PORT = 3000;
 
 // Secret key for signing tokens (In a real app, hide this in a .env file)
-const JWT_SECRET = 'bharat_super_secret_key_2026';
+const JWT_SECRET = process.env.JWT_SECRET;
 
 app.use(express.json());
 app.use(cookieParser()); // Enable cookie parsing
@@ -86,6 +86,118 @@ app.post('/api/verify-otp', (req, res) => {
     }
 });
 
+// app.listen(PORT, () => {
+//     console.log(`Bharat Portal server is live! Maps to: http://localhost:${PORT}/`); 
+// });
+const twilio = require('twilio');
+
+// Initialize Twilio (Use your own SID and Token from twilio.com)
+const accountSid = process.env.TWILIO_ACCOUNT_SID;
+const authToken = process.env.TWILIO_AUTH_TOKEN;
+const twilioNumber = process.env.TWILIO_NUMBER;
+const client = new twilio(accountSid, authToken);
+// A list to track numbers that should receive alerts
+// In a real app, this would be your database of Aadhaar-verified users
+let alertSubscribers = []; 
+
+app.post('/api/verify-otp', (req, res) => {
+    const { phone, otp } = req.body;
+
+    if (mockOtpStore[phone] && mockOtpStore[phone] === otp) {
+        delete mockOtpStore[phone]; 
+        
+        // Generate JWT
+        const token = jwt.sign({ citizenPhone: phone }, JWT_SECRET, { expiresIn: '1h' });
+        res.cookie('auth_token', token, { httpOnly: true, secure: false });
+
+        // CRITICAL: Subscribe the user to alerts here
+        if (!alertSubscribers.includes(phone)) {
+            alertSubscribers.push(phone);
+            console.log(`[SUBSCRIPTION]: ${phone} is now active for alerts.`);
+        }
+        
+        res.json({ success: true, message: 'Identity verified and alerts activated.' });
+    } else {
+        res.status(401).json({ success: false, message: 'Invalid or expired OTP.' });
+    }
+});
+app.post('/api/trigger-test-alert', async (req, res) => {
+    const token = req.cookies.auth_token;
+    try {
+        const decoded = jwt.verify(token, JWT_SECRET);
+        const userPhone = decoded.citizenPhone;
+
+        await client.messages.create({
+            body: 'BHARAT PORTAL DEMO: This is a manually triggered test alert.',
+            to: `+91${userPhone}`,
+            from: twilioNumber
+        });
+
+        res.json({ success: true, message: 'Test SMS sent!' });
+    } catch (err) {
+        res.status(401).json({ success: false, message: 'Authentication required' });
+    }
+});
+
+// Function to send the alert msg to your phone
+function sendCrisisAlert(alertContent) {
+    alertSubscribers.forEach(userPhone => {
+        client.messages.create({
+            body: `BHARAT PORTAL CRITICAL ALERT: ${alertContent}. Move to safety.`,
+            to: `+91${userPhone}`, // Assuming Indian country code
+            from: process.env.TWILIO_NUMBER
+        })
+        .then(message => console.log(`Alert sent to ${userPhone}: ${message.sid}`))
+        .catch(err => console.error("SMS failed:", err));
+    });
+}
+
+// Example: Simulate an AI detecting an earthquake after 10 seconds
+setTimeout(() => {
+    sendCrisisAlert("Earthquake of Magnitude 6.2 detected near Delhi region");
+}, 10000);
+// ... (Your existing code like express, jwt, and twilio setup)
+
+// 1. ADD THIS: The Broadcast Function
+async function broadcastEmergency(eventDescription) {
+    const subscribers = ['8055893317']; 
+
+    subscribers.forEach(phone => {
+        client.messages.create({
+            body: `BHARAT PORTAL CRITICAL ALERT: ${eventDescription}. Stay safe.`,
+            to: `+91${phone}`,
+            from: '+16562680908' // <--- PASTE YOUR TWILIO NUMBER HERE
+        })
+        .then(message => console.log(`[ALERT SENT]: ${phone}`))
+        .catch(err => console.error("Broadcast failed:", err));
+    });
+}
+
+// 2. ADD THIS: The AI-Style Monitoring Logic
+const axios = require('axios'); // Ensure you ran 'npm install axios'
+
+async function monitorForCrisis() {
+    try {
+        const response = await axios.get('https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&minmagnitude=5');
+        const latestQuake = response.data.features[0];
+
+        if (latestQuake) {
+            const description = latestQuake.properties.title;
+            alertSubscribers.forEach(phone => {
+                client.messages.create({
+                    body: `BHARAT PORTAL CRITICAL ALERT: ${description}. Stay safe.`,
+                    to: `+91${phone}`,
+                    from: twilioNumber
+                }).then(() => console.log(`[AUTO-ALERT SENT]: ${phone}`));
+            });
+        }
+    } catch (error) {
+        console.error("Crisis feed unreachable:", error.message);
+    }
+}
+setInterval(monitorForCrisis, 300000);
+
+// Your existing listen command
 app.listen(PORT, () => {
     console.log(`Bharat Portal server is live! Maps to: http://localhost:${PORT}/`); 
 });
