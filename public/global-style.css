@@ -90,3 +90,22 @@ body::before {
     background-size: 100% 3px, 3px 100%;
     pointer-events: none;
 }
+/* Tactical Alert Notification */
+.attack-alert {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    background: rgba(255, 0, 0, 0.2);
+    border: 1px solid #ff4444;
+    padding: 10px 20px;
+    color: #ff4444;
+    font-family: 'Courier New', monospace;
+    text-transform: uppercase;
+    animation: blink 1s infinite;
+    z-index: 1001;
+    display: none; /* Toggle with JS when an attack happens */
+}
+
+@keyframes blink {
+    50% { opacity: 0.3; }
+}
