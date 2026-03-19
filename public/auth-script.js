@@ -6,7 +6,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     let currentPhone = '';
 
-    // Handle OTP Request
     requestForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         const aadhaar = document.getElementById('aadhaar').value;
@@ -24,7 +23,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const data = await response.json();
 
             if (data.success) {
-                currentPhone = phone; // Store phone for verification step
+                currentPhone = phone; 
                 requestForm.style.display = 'none';
                 verifyForm.style.display = 'block';
             } else {
@@ -37,7 +36,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    // Handle OTP Verification
     verifyForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         const otp = document.getElementById('otp').value;
@@ -57,7 +55,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 verifyMsg.className = 'form-msg success';
                 verifyMsg.textContent = 'Authentication Successful. Redirecting...';
                 
-                // Redirect to the main portal upon success
                 setTimeout(() => {
                     window.location.href = 'portal.html';
                 }, 1500);

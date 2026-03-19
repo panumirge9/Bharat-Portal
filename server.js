@@ -1,16 +1,15 @@
 const express = require('express');
 const path = require('path');
-const jwt = require('jsonwebtoken'); // NEW: For generating tokens
-const cookieParser = require('cookie-parser'); // NEW: For reading cookies
+const jwt = require('jsonwebtoken'); 
+const cookieParser = require('cookie-parser'); 
 require('dotenv').config();
 const app = express();
 const PORT = 3000;
 
-// Secret key for signing tokens (In a real app, hide this in a .env file)
 const JWT_SECRET = process.env.JWT_SECRET;
 
 app.use(express.json());
-app.use(cookieParser()); // Enable cookie parsing
+app.use(cookieParser()); 
 
 // --- VERHOEFF ALGORITHM TABLES FOR AADHAAR VALIDATION ---
 const d = [ [0,1,2,3,4,5,6,7,8,9], [1,2,3,4,0,6,7,8,9,5], [2,3,4,0,1,7,8,9,5,6], [3,4,0,1,2,8,9,5,6,7], [4,0,1,2,3,9,5,6,7,8], [5,9,8,7,6,0,4,3,2,1], [6,5,9,8,7,1,0,4,3,2], [7,6,5,9,8,2,1,0,4,3], [8,7,6,5,9,3,2,1,0,4], [9,8,7,6,5,4,3,2,1,0] ];
@@ -28,10 +27,9 @@ function isValidAadhaar(aadhaarString) {
 
 const mockOtpStore = {};
 
-// --- NEW: THE GATEKEEPER MIDDLEWARE ---
-// This runs before sending any files to the user
+
 app.use((req, res, next) => {
-    // List of pages that require authentication
+
     const protectedPages = ['/portal.html', '/bharat-space.html', '/bharat-defence.html', '/bharat-global.html'];
     
     if (protectedPages.includes(req.path)) {
@@ -39,25 +37,25 @@ app.use((req, res, next) => {
         
         if (!token) {
             console.log(`[SECURITY] Blocked unauthorized access to ${req.path}`);
-            return res.redirect('/'); // Kick back to login
+            return res.redirect('/'); 
         }
         
         try {
-            // Verify the token is real and hasn't been tampered with
+            
             jwt.verify(token, JWT_SECRET);
-            return next(); // Token is good, let them see the page
+            return next(); 
         } catch (err) {
             console.log(`[SECURITY] Invalid token used for ${req.path}`);
             return res.redirect('/');
         }
     }
-    next(); // If it's not a protected page (like CSS or the login page), let it through
+    next(); 
 });
 
-// Serve static files AFTER the gatekeeper checks them
+
 app.use(express.static(path.join(__dirname, 'public')));
 
-// --- API ROUTES ---
+
 app.post('/api/send-otp', (req, res) => {
     const { aadhaar, phone } = req.body;
     if (!isValidAadhaar(aadhaar)) return res.status(400).json({ success: false, message: 'Invalid Aadhaar Number. Checksum failed.' });
@@ -74,11 +72,11 @@ app.post('/api/verify-otp', (req, res) => {
     if (mockOtpStore[phone] && mockOtpStore[phone] === otp) {
         delete mockOtpStore[phone]; 
         
-        // NEW: Generate a secure JWT valid for 1 hour
+    
         const token = jwt.sign({ citizenPhone: phone }, JWT_SECRET, { expiresIn: '1h' });
         
-        // Send the token to the browser as an HTTP-Only cookie (safe from cross-site scripting)
-        res.cookie('auth_token', token, { httpOnly: true, secure: false }); // secure: false because we are on localhost HTTP, not HTTPS
+    
+        res.cookie('auth_token', token, { httpOnly: true, secure: false }); 
         
         res.json({ success: true, message: 'Identity verified.' });
     } else {
@@ -86,18 +84,14 @@ app.post('/api/verify-otp', (req, res) => {
     }
 });
 
-// app.listen(PORT, () => {
-//     console.log(`Bharat Portal server is live! Maps to: http://localhost:${PORT}/`); 
-// });
+
 const twilio = require('twilio');
 
-// Initialize Twilio (Use your own SID and Token from twilio.com)
 const accountSid = process.env.TWILIO_ACCOUNT_SID;
 const authToken = process.env.TWILIO_AUTH_TOKEN;
 const twilioNumber = process.env.TWILIO_NUMBER;
 const client = new twilio(accountSid, authToken);
-// A list to track numbers that should receive alerts
-// In a real app, this would be your database of Aadhaar-verified users
+
 let alertSubscribers = []; 
 
 app.post('/api/verify-otp', (req, res) => {
@@ -106,11 +100,11 @@ app.post('/api/verify-otp', (req, res) => {
     if (mockOtpStore[phone] && mockOtpStore[phone] === otp) {
         delete mockOtpStore[phone]; 
         
-        // Generate JWT
+        
         const token = jwt.sign({ citizenPhone: phone }, JWT_SECRET, { expiresIn: '1h' });
         res.cookie('auth_token', token, { httpOnly: true, secure: false });
 
-        // CRITICAL: Subscribe the user to alerts here
+    
         if (!alertSubscribers.includes(phone)) {
             alertSubscribers.push(phone);
             console.log(`[SUBSCRIPTION]: ${phone} is now active for alerts.`);
@@ -139,12 +133,12 @@ app.post('/api/trigger-test-alert', async (req, res) => {
     }
 });
 
-// Function to send the alert msg to your phone
+
 function sendCrisisAlert(alertContent) {
     alertSubscribers.forEach(userPhone => {
         client.messages.create({
             body: `BHARAT PORTAL CRITICAL ALERT: ${alertContent}. Move to safety.`,
-            to: `+91${userPhone}`, // Assuming Indian country code
+            to: `+91${userPhone}`, 
             from: process.env.TWILIO_NUMBER
         })
         .then(message => console.log(`Alert sent to ${userPhone}: ${message.sid}`))
@@ -152,13 +146,12 @@ function sendCrisisAlert(alertContent) {
     });
 }
 
-// Example: Simulate an AI detecting an earthquake after 10 seconds
+
 setTimeout(() => {
     sendCrisisAlert("Earthquake of Magnitude 6.2 detected near Delhi region");
 }, 10000);
-// ... (Your existing code like express, jwt, and twilio setup)
 
-// 1. ADD THIS: The Broadcast Function
+
 async function broadcastEmergency(eventDescription) {
     const subscribers = ['8055893317']; 
 
@@ -166,15 +159,15 @@ async function broadcastEmergency(eventDescription) {
         client.messages.create({
             body: `BHARAT PORTAL CRITICAL ALERT: ${eventDescription}. Stay safe.`,
             to: `+91${phone}`,
-            from: '+16562680908' // <--- PASTE YOUR TWILIO NUMBER HERE
+            from: '+16562680908'
         })
         .then(message => console.log(`[ALERT SENT]: ${phone}`))
         .catch(err => console.error("Broadcast failed:", err));
     });
 }
 
-// 2. ADD THIS: The AI-Style Monitoring Logic
-const axios = require('axios'); // Ensure you ran 'npm install axios'
+
+const axios = require('axios'); 
 
 async function monitorForCrisis() {
     try {
@@ -197,7 +190,6 @@ async function monitorForCrisis() {
 }
 setInterval(monitorForCrisis, 300000);
 
-// Your existing listen command
 app.listen(PORT, () => {
     console.log(`Bharat Portal server is live! Maps to: http://localhost:${PORT}/`); 
 });

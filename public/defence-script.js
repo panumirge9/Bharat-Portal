@@ -2,7 +2,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const serviceCards = document.querySelectorAll('.service-card');
     
-    // Double click navigation
     serviceCards.forEach(card => {
         card.addEventListener('dblclick', () => {
 
@@ -20,7 +19,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    // Tactical sparks effect
+    
     const defenceHero = document.querySelector('.defence-hero');
 
     if (defenceHero) {
@@ -38,7 +37,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // Extra information
+
     const extraDetails = {
         army: "<strong>Motto:</strong> Service Before Self.<br><br>The Indian Army is the second-largest standing army in the world with strong mountain warfare capabilities.",
         navy: "<strong>Motto:</strong> May the Lord of the Water be auspicious unto us.<br><br>A blue-water navy with aircraft carriers, submarines and destroyers.",

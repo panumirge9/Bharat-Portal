@@ -6,12 +6,12 @@
 }
 
 body {
-    background-color: transparent; /* Changed from solid black so video shows */
+    background-color: transparent; 
     color: #ffffff;
     line-height: 1.6;
 }
 
-/* --- Portal Navigation --- */
+
 .portal-nav {
     display: flex;
     justify-content: space-between;
@@ -34,7 +34,7 @@ body {
 }
 
 .logo i {
-    color: #ff9933; /* Saffron accent */
+    color: #ff9933; 
 }
 
 .portal-nav ul {
@@ -54,10 +54,10 @@ body {
 
 .portal-nav ul li a:hover, 
 .portal-nav ul li a.active {
-    color: #138808; /* Green accent */
+    color: #138808; 
 }
 
-/* --- Hero & Dashboard Layout --- */
+
 .portal-hero {
     min-height: calc(100vh - 80px);
     display: flex;
@@ -65,7 +65,7 @@ body {
     align-items: center;
     text-align: center;
     padding: 50px;
-    /* Removed the radial-gradient line completely! */
+
 }
 
 .hero-content h1 {
@@ -80,7 +80,7 @@ body {
     margin-bottom: 50px;
 }
 
-/* --- Category Cards --- */
+
 .category-cards {
     display: flex;
     gap: 30px;
@@ -121,14 +121,14 @@ body {
     color: #888888;
     margin-bottom: 0;
 }
-/* --- Background Video Styles --- */
+
 .video-bg-container {
     position: fixed; 
     top: 0;
     left: 0;
     width: 100vw;
     height: 100vh;
-    z-index: -1; /* This is crucial, it pushes it behind everything */
+    z-index: -1; 
     overflow: hidden;
 }
 
@@ -144,12 +144,12 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(10, 11, 16, 0.75); /* Dark tint */
+    background: rgba(10, 11, 16, 0.75); 
 }
 
-/* Ensure the portal-hero section is transparent so the video shows through */
+
 .portal-hero {
-    background-color: transparent !important; /* Forces it to be see-through */
+    background-color: transparent !important; 
     position: relative;
     z-index: 1;
 }

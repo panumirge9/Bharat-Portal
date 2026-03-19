@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-    // 1. Sticky Navigation Bar Effect
+    
     const navbar = document.getElementById('navbar');
     if (navbar) {
         window.addEventListener('scroll', () => {
@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // 2. Smooth Scrolling for Navigation Links
+
     document.querySelectorAll('nav ul li a, .footer-links a').forEach(anchor => {
         anchor.addEventListener('click', function(e) {
             e.preventDefault();
@@ -19,14 +19,14 @@ document.addEventListener("DOMContentLoaded", () => {
             const targetSection = document.getElementById(targetId);
             if (targetSection) {
                 window.scrollTo({
-                    top: targetSection.offsetTop - 80, // Offset for fixed header
+                    top: targetSection.offsetTop - 80,
                     behavior: 'smooth'
                 });
             }
         });
     });
 
-    // 3. Dark Mode Toggle
+
     const themeToggle = document.getElementById('theme-toggle');
     const body = document.body;
     if (themeToggle) {
@@ -43,7 +43,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // 4. Space News Ticker Logic
     const newsItems = [
         "Gaganyaan: Final crew module recovery tests scheduled for next month.",
         "Aditya-L1: Sends first high-resolution images of the Sun's corona.",
@@ -64,7 +63,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }, 5000); 
     }
 
-    // 5. Scroll Reveal Animations
+    
     const reveals = document.querySelectorAll('.reveal');
     const revealObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
@@ -72,11 +71,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 entry.target.classList.add('active');
             }
         });
-    }, { threshold: 0.1 }); // Lowered threshold so it triggers more reliably
+    }, { threshold: 0.1 }); 
 
     reveals.forEach(reveal => revealObserver.observe(reveal));
 
-    // 6. Animated Counters for Statistics
     const counters = document.querySelectorAll('.counter');
     let hasCounted = false; 
 
@@ -100,12 +98,12 @@ document.addEventListener("DOMContentLoaded", () => {
                 updateCount();
             });
         }
-    }, { threshold: 0.1 }); // Lowered threshold for counters too
+    }, { threshold: 0.1 }); 
     
     const statsSection = document.getElementById('stats');
     if(statsSection) counterObserver.observe(statsSection);
 
-    // 7. Countdown Timer Logic
+
     const countdownElement = document.getElementById('countdown');
     if (countdownElement) {
         let targetDate = new Date();
@@ -127,7 +125,7 @@ document.addEventListener("DOMContentLoaded", () => {
         updateCountdown(); 
     }
 
-    // 8. Generate Star Background Particles
+
     const starsContainer = document.getElementById('stars-container');
     if (starsContainer) {
         for (let i = 0; i < 150; i++) {
@@ -149,7 +147,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // 9. Interactive CTA Button Alert
+
     const launchBtn = document.getElementById('launch-btn');
     if (launchBtn) {
         launchBtn.addEventListener('click', () => {
@@ -161,17 +159,17 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 });
-// 4. Fetch Dynamic Mission Data
+
 async function loadMissions() {
     try {
         const response = await fetch('missions.json');
         const data = await response.json();
         
         const grid = document.querySelector('.mission-grid');
-        grid.innerHTML = ''; // Clear the hardcoded HTML cards
+        grid.innerHTML = ''; 
         
         data.missions.forEach(mission => {
-            // Create a new card for each mission in the JSON
+            
             const card = document.createElement('div');
             card.className = 'mission-card';
             
@@ -187,29 +185,27 @@ async function loadMissions() {
     }
 }
 
-// Call the function when the page loads
 document.addEventListener('DOMContentLoaded', loadMissions);
-// 10. Search Filtering for Missions
+
     const searchInput = document.getElementById('searchInput');
     const missionCards = document.querySelectorAll('#missions .card');
 
     if (searchInput) {
         searchInput.addEventListener('input', function() {
-            // Get the user's search term and convert it to lowercase
+            
             const searchTerm = this.value.toLowerCase();
 
-            // Loop through each mission card
             missionCards.forEach(card => {
-                // Grab the text from the title and description of the card
+                
                 const title = card.querySelector('h3').textContent.toLowerCase();
                 const description = card.querySelector('p').textContent.toLowerCase();
                 
-                // Check if the search term exists in either the title or description
+            
                 if (title.includes(searchTerm) || description.includes(searchTerm)) {
-                    // Show the card if there's a match
+                    
                     card.style.display = ''; 
                 } else {
-                    // Hide the card if there's no match
+                    
                     card.style.display = 'none';
                 }
             });
