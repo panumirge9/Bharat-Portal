@@ -2,7 +2,7 @@ const express = require('express');
 const path = require('path');
 const jwt = require('jsonwebtoken'); 
 const cookieParser = require('cookie-parser'); 
-const axios = require('axios'); // Kept for the GNews backend route
+const axios = require('axios'); 
 require('dotenv').config();
 
 const app = express();
@@ -28,7 +28,6 @@ function isValidAadhaar(aadhaarString) {
 
 const mockOtpStore = {};
 
-// --- GATEKEEPER MIDDLEWARE ---
 app.use((req, res, next) => {
     const protectedPages = ['/portal.html', '/bharat-space.html', '/bharat-defence.html', '/bharat-global.html'];
     
@@ -51,13 +50,12 @@ app.use((req, res, next) => {
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-// --- AUTHENTICATION ROUTES ---
 app.post('/api/send-otp', (req, res) => {
     const { aadhaar, phone } = req.body;
     if (!isValidAadhaar(aadhaar)) return res.status(400).json({ success: false, message: 'Invalid Aadhaar Number. Checksum failed.' });
     if (!phone || !/^\d{10}$/.test(phone)) return res.status(400).json({ success: false, message: 'Invalid Mobile Number.' });
 
-    const otp = '123456'; // Simulated OTP
+    const otp = '123456'; 
     mockOtpStore[phone] = otp;
     setTimeout(() => res.json({ success: true, message: 'OTP sent to registered mobile.' }), 1000);
 });
@@ -70,8 +68,7 @@ app.post('/api/verify-otp', (req, res) => {
         
         const token = jwt.sign({ citizenPhone: phone }, JWT_SECRET, { expiresIn: '1h' });
         
-        // Note: Set secure to true if deploying with HTTPS
-        res.cookie('auth_token', token, { httpOnly: true, secure: true }); 
+        res.cookie('auth_token', token, { httpOnly: true, secure: false }); 
         
         res.json({ success: true, message: 'Identity verified.' });
     } else {
@@ -79,7 +76,6 @@ app.post('/api/verify-otp', (req, res) => {
     }
 });
 
-// --- SECURE NEWS UPLINK ROUTE ---
 app.get('/api/news', async (req, res) => {
     const countryName = req.query.country;
     if (!countryName) return res.status(400).json({ error: 'Country parameter is required' });

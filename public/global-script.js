@@ -116,7 +116,6 @@ document.addEventListener("DOMContentLoaded", () => {
         world.objectsData(satellites);
     }, 50);
 
- 
     fetch('https://raw.githubusercontent.com/vasturiano/globe.gl/master/example/datasets/ne_110m_admin_0_countries.geojson')
         .then(res => res.json())
         .then(countries => world.polygonsData(countries.features));
@@ -241,7 +240,6 @@ async function fetchCountryNews(countryName) {
     panel.classList.add('active');
 
     try {
-        // We now call your secure backend route instead of the external API
         const url = `/api/news?country=${encodeURIComponent(countryName)}`;
         console.log("Fetching from Backend Route:", url);
 
