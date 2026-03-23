@@ -2,10 +2,11 @@ const express = require('express');
 const path = require('path');
 const jwt = require('jsonwebtoken'); 
 const cookieParser = require('cookie-parser'); 
+const axios = require('axios'); // Kept for the GNews backend route
 require('dotenv').config();
-const app = express();
-const PORT = 3000;
 
+const app = express();
+const PORT = process.env.PORT || 3000;
 const JWT_SECRET = process.env.JWT_SECRET;
 
 app.use(express.json());
@@ -27,21 +28,17 @@ function isValidAadhaar(aadhaarString) {
 
 const mockOtpStore = {};
 
-
+// --- GATEKEEPER MIDDLEWARE ---
 app.use((req, res, next) => {
-
     const protectedPages = ['/portal.html', '/bharat-space.html', '/bharat-defence.html', '/bharat-global.html'];
     
     if (protectedPages.includes(req.path)) {
         const token = req.cookies.auth_token;
-        
         if (!token) {
             console.log(`[SECURITY] Blocked unauthorized access to ${req.path}`);
             return res.redirect('/'); 
         }
-        
         try {
-            
             jwt.verify(token, JWT_SECRET);
             return next(); 
         } catch (err) {
@@ -52,16 +49,15 @@ app.use((req, res, next) => {
     next(); 
 });
 
-
 app.use(express.static(path.join(__dirname, 'public')));
 
-
+// --- AUTHENTICATION ROUTES ---
 app.post('/api/send-otp', (req, res) => {
     const { aadhaar, phone } = req.body;
     if (!isValidAadhaar(aadhaar)) return res.status(400).json({ success: false, message: 'Invalid Aadhaar Number. Checksum failed.' });
     if (!phone || !/^\d{10}$/.test(phone)) return res.status(400).json({ success: false, message: 'Invalid Mobile Number.' });
 
-    const otp = '123456'; 
+    const otp = '123456'; // Simulated OTP
     mockOtpStore[phone] = otp;
     setTimeout(() => res.json({ success: true, message: 'OTP sent to registered mobile.' }), 1000);
 });
@@ -72,11 +68,10 @@ app.post('/api/verify-otp', (req, res) => {
     if (mockOtpStore[phone] && mockOtpStore[phone] === otp) {
         delete mockOtpStore[phone]; 
         
-    
         const token = jwt.sign({ citizenPhone: phone }, JWT_SECRET, { expiresIn: '1h' });
         
-    
-        res.cookie('auth_token', token, { httpOnly: true, secure: false }); 
+        // Note: Set secure to true if deploying with HTTPS
+        res.cookie('auth_token', token, { httpOnly: true, secure: true }); 
         
         res.json({ success: true, message: 'Identity verified.' });
     } else {
@@ -84,111 +79,21 @@ app.post('/api/verify-otp', (req, res) => {
     }
 });
 
+// --- SECURE NEWS UPLINK ROUTE ---
+app.get('/api/news', async (req, res) => {
+    const countryName = req.query.country;
+    if (!countryName) return res.status(400).json({ error: 'Country parameter is required' });
 
-const twilio = require('twilio');
-
-const accountSid = process.env.TWILIO_ACCOUNT_SID;
-const authToken = process.env.TWILIO_AUTH_TOKEN;
-const twilioNumber = process.env.TWILIO_NUMBER;
-const client = new twilio(accountSid, authToken);
-
-let alertSubscribers = []; 
-
-app.post('/api/verify-otp', (req, res) => {
-    const { phone, otp } = req.body;
-
-    if (mockOtpStore[phone] && mockOtpStore[phone] === otp) {
-        delete mockOtpStore[phone]; 
-        
-        
-        const token = jwt.sign({ citizenPhone: phone }, JWT_SECRET, { expiresIn: '1h' });
-        res.cookie('auth_token', token, { httpOnly: true, secure: false });
-
-    
-        if (!alertSubscribers.includes(phone)) {
-            alertSubscribers.push(phone);
-            console.log(`[SUBSCRIPTION]: ${phone} is now active for alerts.`);
-        }
-        
-        res.json({ success: true, message: 'Identity verified and alerts activated.' });
-    } else {
-        res.status(401).json({ success: false, message: 'Invalid or expired OTP.' });
-    }
-});
-app.post('/api/trigger-test-alert', async (req, res) => {
-    const token = req.cookies.auth_token;
     try {
-        const decoded = jwt.verify(token, JWT_SECRET);
-        const userPhone = decoded.citizenPhone;
-
-        await client.messages.create({
-            body: 'BHARAT PORTAL DEMO: This is a manually triggered test alert.',
-            to: `+91${userPhone}`,
-            from: twilioNumber
-        });
-
-        res.json({ success: true, message: 'Test SMS sent!' });
-    } catch (err) {
-        res.status(401).json({ success: false, message: 'Authentication required' });
-    }
-});
-
-
-function sendCrisisAlert(alertContent) {
-    alertSubscribers.forEach(userPhone => {
-        client.messages.create({
-            body: `BHARAT PORTAL CRITICAL ALERT: ${alertContent}. Move to safety.`,
-            to: `+91${userPhone}`, 
-            from: process.env.TWILIO_NUMBER
-        })
-        .then(message => console.log(`Alert sent to ${userPhone}: ${message.sid}`))
-        .catch(err => console.error("SMS failed:", err));
-    });
-}
-
-
-setTimeout(() => {
-    sendCrisisAlert("Earthquake of Magnitude 6.2 detected near Delhi region");
-}, 10000);
-
-
-async function broadcastEmergency(eventDescription) {
-    const subscribers = ['8055893317']; 
-
-    subscribers.forEach(phone => {
-        client.messages.create({
-            body: `BHARAT PORTAL CRITICAL ALERT: ${eventDescription}. Stay safe.`,
-            to: `+91${phone}`,
-            from: '+16562680908'
-        })
-        .then(message => console.log(`[ALERT SENT]: ${phone}`))
-        .catch(err => console.error("Broadcast failed:", err));
-    });
-}
-
-
-const axios = require('axios'); 
-
-async function monitorForCrisis() {
-    try {
-        const response = await axios.get('https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&minmagnitude=5');
-        const latestQuake = response.data.features[0];
-
-        if (latestQuake) {
-            const description = latestQuake.properties.title;
-            alertSubscribers.forEach(phone => {
-                client.messages.create({
-                    body: `BHARAT PORTAL CRITICAL ALERT: ${description}. Stay safe.`,
-                    to: `+91${phone}`,
-                    from: twilioNumber
-                }).then(() => console.log(`[AUTO-ALERT SENT]: ${phone}`));
-            });
-        }
+        const apiKey = process.env.GNEWS_API_KEY; 
+        const url = `https://gnews.io/api/v4/search?q=${encodeURIComponent(countryName)}&lang=en&max=5&apikey=${apiKey}`;
+        const response = await axios.get(url);
+        res.json(response.data); 
     } catch (error) {
-        console.error("Crisis feed unreachable:", error.message);
+        console.error("GNews API Error:", error.message);
+        res.status(500).json({ error: 'Failed to fetch news briefings' });
     }
-}
-setInterval(monitorForCrisis, 300000);
+});
 
 app.listen(PORT, () => {
     console.log(`Bharat Portal server is live! Maps to: http://localhost:${PORT}/`); 

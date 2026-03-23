@@ -1,5 +1,4 @@
 
-const API_KEY = 'd01453a71ad3848c6c4d1e8b463dc49d'; 
 const ATTACK_COLOR = ['#ff4444', '#ffff00']; 
 const FLIGHT_TIME = 2000; 
 
@@ -242,8 +241,9 @@ async function fetchCountryNews(countryName) {
     panel.classList.add('active');
 
     try {
-        const url = `https://gnews.io/api/v4/search?q=${countryName}&lang=en&max=5&apikey=${API_KEY}`;
-        console.log("Fetching from URL:", url);
+        // We now call your secure backend route instead of the external API
+        const url = `/api/news?country=${encodeURIComponent(countryName)}`;
+        console.log("Fetching from Backend Route:", url);
 
         const res = await fetch(url);
         console.log("Server Response Status:", res.status);
